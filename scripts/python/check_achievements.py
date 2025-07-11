@@ -78,4 +78,6 @@ for u in USERS:
 
     new_state[u["username"]] = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
 
+# Ensure data folder exists before writing state file
+DATA.mkdir(parents=True, exist_ok=True)
 STATE_FILE.write_text(json.dumps(new_state, indent=2))
