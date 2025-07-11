@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "username": "SlawPro",
+    "api_key": "your_ra_api_key_here",
+    "discord_id": null
+  }
+]
