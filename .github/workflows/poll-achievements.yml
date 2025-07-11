@@ -1,8 +1,8 @@
 name: Poll RetroAchievements
 
 on:
-  schedule:  # every 5 min – GitHub’s minimum; adjust if you hit RA rate limits
-    - cron:  '*/5 * * * *'
+  schedule:  # every 5 min – GitHub’s minimum; adjust if you hit RA rate limits
+    - cron: '*/5 * * * *'
   workflow_dispatch:  # manual run button
 
 jobs:
@@ -25,9 +25,13 @@ jobs:
         run: python scripts/python/check_achievements.py
 
       - name: Persist new state (last_polled.json)
+        env:
+          # PAT token with repo write access must be added in your repo secrets as PAT_TOKEN
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${PAT_TOKEN}@github.com/SlawSimulation/RA-DT.git
           git add data/last_polled.json
-          git commit -m "chore: update last_polled [skip ci]" || echo "no changes"
+          git commit -m "chore: update last_polled [skip ci]" || echo "no changes to commit"
           git push
