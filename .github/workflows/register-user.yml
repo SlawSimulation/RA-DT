@@ -1,0 +1,53 @@
+name: Register User to RA Bot
+
+on:
+  repository_dispatch:
+    types: [register-user]
+
+jobs:
+  add-user:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install jq (for JSON editing)
+        run: sudo apt-get install jq
+
+      - name: Add user to users.json
+        env:
+          GH_USERNAME: ${{ secrets.GH_USERNAME }}
+          GH_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
+        run: |
+          echo '::group::Parse incoming payload'
+          echo '${{ toJson(github.event.client_payload) }}' > payload.json
+          USERNAME=$(jq -r '.username' payload.json)
+          API_KEY=$(jq -r '.api_key' payload.json)
+          DISCORD_ID=$(jq -r '.discord_id // empty' payload.json)
+          echo "Adding user: $USERNAME"
+          echo '::endgroup::'
+
+          # Append user to users.json if not already there
+          if ! jq -e ".[] | select(.username == \"$USERNAME\")" data/users.json > /dev/null; then
+            jq ". + [{\"username\": \"$USERNAME\", \"api_key\": \"$API_KEY\", \"discord_id\": \"$DISCORD_ID\"}]" data/users.json > temp.json
+            mv temp.json data/users.json
+          else
+            echo "User $USERNAME already exists."
+          fi
+
+      - name: Commit and push changes
+        env:
+          PAT_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git config user.name "${{ env.GH_USERNAME }}"
+          git config user.email "${{ env.GH_EMAIL }}"
+          git remote set-url origin https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}
+          git add data/users.json
+          git commit -m "Register user $USERNAME [skip ci]" || echo "No changes"
+          git push
