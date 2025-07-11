@@ -2,8 +2,8 @@ name: Poll RetroAchievements
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
-  workflow_dispatch:
+    - cron: '*/5 * * * *'  # every 5 minutes
+  workflow_dispatch:        # manual trigger
 
 jobs:
   poll:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout with PAT auth
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT_TOKEN }}  # ✅ inject the PAT here directly
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,9 +29,12 @@ jobs:
         run: python scripts/python/check_achievements.py
 
       - name: Commit and push updated state
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}
           git add data/last_polled.json
           git commit -m "chore: update last_polled [skip ci]" || echo "No changes"
-          git push
+          git push origin main
