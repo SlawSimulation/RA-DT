@@ -9,11 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-  uses: actions/checkout@v4
-  with:
-    token: ${{ secrets.PAT_TOKEN }}
-
+      - name: Checkout with PAT auth
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -21,7 +20,7 @@ jobs:
           node-version: 20
 
       - name: Install jq (for JSON editing)
-        run: sudo apt-get install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Add user to users.json
         run: |
@@ -33,6 +32,7 @@ jobs:
           echo "📝 Adding user: $USERNAME"
           echo '::endgroup::'
 
+          # Add user if not already registered
           if ! jq -e ".[] | select(.username == \"$USERNAME\")" data/users.json > /dev/null; then
             jq ". + [{\"username\": \"$USERNAME\", \"api_key\": \"$API_KEY\", \"discord_id\": \"$DISCORD_ID\"}]" data/users.json > temp.json
             mv temp.json data/users.json
@@ -48,5 +48,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}
           git add data/users.json
-          git commit -m "Register user from API [skip ci]" || echo "No changes"
+          git commit -m "Register user $USERNAME [skip ci]" || echo "No changes"
           git push origin main
