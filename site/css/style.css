@@ -1,1 +1,80 @@
+/* Discord-inspired style */
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #2c2f33;
+  color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 
+.form-container {
+  background-color: #23272a;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+  max-width: 420px;
+  width: 100%;
+}
+
+h1 {
+  font-size: 1.6rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  font-size: 0.9rem;
+  color: #bbbbbb;
+  margin-bottom: 1.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+label {
+  font-size: 0.85rem;
+  color: #ddd;
+}
+
+input[type="text"] {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #2c2f33;
+  color: #f0f0f0;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+input[type="text"]:focus {
+  border-color: #7289da;
+}
+
+button {
+  margin-top: 0.5rem;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(to right, #7289da, #5b6eae);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: linear-gradient(to right, #5b6eae, #4b5c8a);
+}
+
+#response-message {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #43b581; /* success green */
+}
