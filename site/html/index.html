@@ -1,1 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RA Discord Register</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="form-container">
+    <h1>🎮 RetroAchievements Registration</h1>
+    <p>Register to get achievement notifications in Discord.</p>
 
+    <form id="register-form">
+      <label for="username">RA Username</label>
+      <input type="text" name="username" id="username" required />
+
+      <label for="api_key">RA API Key</label>
+      <input type="text" name="api_key" id="api_key" required />
+
+      <label for="discord_id">Discord User ID (optional)</label>
+      <input type="text" name="discord_id" id="discord_id" />
+
+      <button type="submit">Register</button>
+    </form>
+
+    <div id="response-message"></div>
+  </div>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
