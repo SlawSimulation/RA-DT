@@ -6,7 +6,7 @@ import requests
 import sys
 
 # Paths
-ROOT = pathlib.Path(__file__).resolve().parents[2]
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 DATA = ROOT / "data"
 USERS_FILE = DATA / "users.json"
 STATE_FILE = DATA / "last_polled.json"
